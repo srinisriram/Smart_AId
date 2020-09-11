@@ -6,13 +6,12 @@ import time
 import cv2
 import imutils
 import numpy as np
-from play_audio_attendance import PlayAudio
-from open_door import OpenDoor
-from constants import prototxt_path, model_path, embedder_path, recognizer_path, labels_path, abhisar_sound_path, \
-    srinivas_sound_path, aditya_sound_path, COLORS, LABELS, frame_width_in_pixels, OPEN_DISPLAY, MIN_CONFIDENCE, \
+from constants import prototxt_path, model_path, embedder_path, recognizer_path, labels_path, COLORS, LABELS, \
+    frame_width_in_pixels, OPEN_DISPLAY, MIN_CONFIDENCE, \
     MIN_CONFIDENCE_FOR_FACE
-
 from imutils.video import VideoStream
+from open_door import OpenDoor
+from play_audio_attendance import PlayAudio
 
 
 class AttendanceTracker:
@@ -294,6 +293,14 @@ class AttendanceTracker:
             self.runMotor = False
             print("[INFO]: Stopping Open Door thread.")
 
+    def check_name(self):
+        """
+            This function is used for checking which person is detected and if the probability is higher than the minimum confidence.
+        """
+        if self.name == "Srinivas" and self.probability > MIN_CONFIDENCE_FOR_FACE: self.play_audio_srini(); self.open_door()
+        if self.name == "Abhisar" and self.probability > MIN_CONFIDENCE_FOR_FACE: self.play_audio_abhi(); self.open_door()
+        if self.name == "Aditya" and self.probability > MIN_CONFIDENCE_FOR_FACE: self.play_audio_aditya(); self.open_door()
+
     def loop_over_frames(self):
         """
         This is the main function that will loop through the frames and use the functions defined above to keep track of attendance.
@@ -318,15 +325,7 @@ class AttendanceTracker:
                     if self.debug:
                         print("Label {} + Probability = {}".format(self.name, self.probability))
                         print("Confidence of face detection", self.confidence)
-                    if self.name == "Srinivas" and self.probability > MIN_CONFIDENCE_FOR_FACE:
-                        self.play_audio_srini()
-                        self.open_door()
-                    if self.name == "Abhisar" and self.probability > MIN_CONFIDENCE_FOR_FACE:
-                        self.play_audio_abhi()
-                        self.open_door()
-                    if self.name == "Aditya" and self.probability > MIN_CONFIDENCE_FOR_FACE:
-                        self.play_audio_aditya()
-                        self.open_door()
+                    self.check_name()
                     self.create_frame_icons()
                     cv2.rectangle(self.frame, (self.startX, self.startY), (self.endX, self.endY),
                                   COLORS[self.colorIndex], 2)

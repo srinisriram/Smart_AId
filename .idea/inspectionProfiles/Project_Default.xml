@@ -1,0 +1,16 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="people_counting_opencv.human_detector.send_receive_messages" />
+          <option value="people_counting_opencv.human_detector.constants" />
+          <option value="people_counting_opencv.human_detector.logger" />
+          <option value="people_counting_opencv.human_tracker_handler.human_tracker" />
+          <option value="sklearn.datasets.load_breast_cancer" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
