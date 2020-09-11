@@ -5,7 +5,7 @@ import time
 import cv2
 import imutils
 import numpy as np
-from constants import prototxt_path, model_path, frame_width_in_pixels
+from constants import prototxt_path, model_path, frame_width_in_pixels, CLASSES, COLORS
 from distance_calculations import calcDistance, get_angle, finalDist
 from imutils.video import VideoStream
 from play_audio_social import PlayAudio
@@ -131,13 +131,13 @@ class SocialDistancing:
             self.box[0], self.box[1], self.box[2] - self.box[0], self.box[3] - self.box[1])
         self.dist = calcDistance(self.width)
 
-        self.labels = "{}: {:.2f}%".format(self.CLASSES[self.idx],
+        self.labels = "{}: {:.2f}%".format(CLASSES[self.idx],
                                            self.confidence * 100)
         cv2.rectangle(self.frame, (self.box[0], self.box[1]), (self.box[2], self.box[3]),
-                      self.COLORS[self.idx], 2)
+                      COLORS[self.idx], 2)
         self.y = self.box[1] - 15 if self.box[1] - 15 > 15 else self.box[1] + 15
         cv2.putText(self.frame, str(self.label) + " " + str(self.dist), (self.box[0], self.y),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.COLORS[self.idx], 2)
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[self.idx], 2)
 
     def find_dist_between_humans(self):
         """
