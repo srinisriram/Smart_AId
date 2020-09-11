@@ -207,8 +207,6 @@ class SocialDistancing:
         """
         while SocialDistancing.run_program:
             try:
-                self.load_models()
-                self.start_video_stream()
                 self.grab_next_frame()
                 self.set_dimensions_for_frame()
                 self.create_frame_blob()
