@@ -13,4 +13,4 @@ model_path = 'models/MobileNetSSD_deploy.caffemodel'
 
 sound_file = 'sound_files/warning.wav'
 
-frame_width_in_pixels = 640
+frame_width_in_pixels = 320
