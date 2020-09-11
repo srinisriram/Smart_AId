@@ -284,7 +284,7 @@ class AttendanceTracker:
         """
         This function is used for opening the door by using motors and Raspberry Pi GPIO pins.
         """
-        MotorThread = threading.Thread(target=OpenDoor.open_door)
+        MotorThread = threading.Thread(target=OpenDoor().thread_for_opening_door)
         print("[INFO]: Starting Open Door Thread.")
         if not self.runMotor:
             self.runMotor = True
@@ -297,9 +297,15 @@ class AttendanceTracker:
         """
             This function is used for checking which person is detected and if the probability is higher than the minimum confidence.
         """
-        if self.name == "Srinivas" and self.probability > MIN_CONFIDENCE_FOR_FACE: self.play_audio_srini(); self.open_door()
-        if self.name == "Abhisar" and self.probability > MIN_CONFIDENCE_FOR_FACE: self.play_audio_abhi(); self.open_door()
-        if self.name == "Aditya" and self.probability > MIN_CONFIDENCE_FOR_FACE: self.play_audio_aditya(); self.open_door()
+        if self.name == "Srinivas" and self.probability > MIN_CONFIDENCE_FOR_FACE:
+            self.play_audio_srini()
+            self.open_door()
+        if self.name == "Abhisar" and self.probability > MIN_CONFIDENCE_FOR_FACE: 
+            self.play_audio_abhi()
+            self.open_door()
+        if self.name == "Aditya" and self.probability > MIN_CONFIDENCE_FOR_FACE: 
+            self.play_audio_aditya()
+            self.open_door()
 
     def loop_over_frames(self):
         """
@@ -347,7 +353,7 @@ class AttendanceTracker:
         cv2.destroyAllWindows()
         self.vs.release()
 
-    def thread_for_attendance_tracking(self):
+    def thread_for_attendance_tracker(self):
         """
         Callable function that will run the attendance tracker and can be invoked in a thread.
         :return:

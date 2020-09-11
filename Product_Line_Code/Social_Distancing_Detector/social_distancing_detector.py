@@ -1,17 +1,19 @@
-import time
-import cv2
-import numpy as np
-import math
-from constants import CLASSES, COLORS, prototxt_path, model_path, frame_width_in_pixels
-from distance_calculations import calcDistance, get_angle, finalDist
-import threading
-import os
-import imutils
-from play_audio_attendance import PlayAudio
 import sys
+import threading
+import time
+
+import cv2
+import imutils
+import numpy as np
+from constants import prototxt_path, model_path, frame_width_in_pixels, CLASSES, COLORS
+from distance_calculations import calcDistance, get_angle, finalDist
+from imutils.video import VideoStream
+from play_audio_social import PlayAudio
+
 
 class SocialDistancing:
     preferableTarget = None
+    run_program = True
 
     def __init__(self):
         self.net = None
@@ -41,8 +43,7 @@ class SocialDistancing:
         self.Asum = None
         self.key = None
         self.AudioPlay = True
-        self.humanIndex = 16
-        self.run_program = True
+        self.humanIndex = 15
 
         self.load_models()
         self.start_video_stream()
@@ -54,7 +55,7 @@ class SocialDistancing:
         :key
         """
         SocialDistancing.preferableTarget = preferableTarget
-        t1 = threading.Thread(target=SocialDistancing.thread_for_social_distancing_detection)
+        t1 = threading.Thread(target=SocialDistancing().thread_for_social_distancing_detection)
         t1.start()
 
     def load_models(self):
@@ -62,12 +63,7 @@ class SocialDistancing:
         This method will load the caffe model that we will use for detecting humans, and then set the preferable target to the correct target.
         :key
         """
-        self.net = cv2.dnn.readNetFromCaffe(os.path.join(
-            os.path.dirname(os.path.realpath(__file__)),
-            prototxt_path),
-            os.path.join(
-                os.path.dirname(os.path.realpath(__file__)),
-                model_path))
+        self.net = cv2.dnn.readNetFromCaffe(prototxt_path, model_path)
         self.net.setPreferableTarget(SocialDistancing.preferableTarget)
 
     def start_video_stream(self):
@@ -76,14 +72,15 @@ class SocialDistancing:
         :key
         """
         print("[INFO] starting video stream...")
-        self.vs = cv2.VideoCapture(0)
+        self.vs = VideoStream(src=0).start()
+        time.sleep(2.0)
 
     def grab_next_frame(self):
         """
         This method extracts the next frame from the video stream.
         :key
         """
-        _, self.frame = self.vs.read()
+        self.frame = self.vs.read()
         if self.frame is None:
             return
         self.frame = imutils.resize(self.frame, width=frame_width_in_pixels)
@@ -95,6 +92,13 @@ class SocialDistancing:
         """
         if not self.h or not self.w:
             (self.h, self.w) = self.frame.shape[:2]
+
+    def rotate_frame(self):
+        """
+        This method will rotate the frame as the camera was installed upside down.
+        :key
+        """
+        self.frame = cv2.rotate(self.frame, cv2.ROTATE_180)
 
     def create_frame_blob(self):
         """
@@ -118,11 +122,11 @@ class SocialDistancing:
                 self.label = round(self.idx)
 
                 if self.label == self.humanIndex:
-                    self.find_dist_each_human()
+                    self.find_dist_each_human(i)
 
         self.find_dist_between_humans()
 
-    def find_dist_each_human(self):
+    def find_dist_each_human(self, i):
         """
         This method will find the distance for each human from the camera and draw the bounding boxes onto the frame.
         :return:
@@ -131,34 +135,40 @@ class SocialDistancing:
         self.box2 = (self.box[0], self.box[1], self.box[2] - self.box[0], self.box[3] - self.box[1])
         self.faces.append(self.box2)
         (self.xCorr, self.yCoor, self.width, self.height) = (
-        self.box[0], self.box[1], self.box[2] - self.box[0], self.box[3] - self.box[1])
+            self.box[0], self.box[1], self.box[2] - self.box[0], self.box[3] - self.box[1])
         self.dist = calcDistance(self.width)
 
-        self.labels = "{}: {:.2f}%".format(self.CLASSES[self.idx],
+        self.labels = "{}: {:.2f}%".format(CLASSES[self.idx],
                                            self.confidence * 100)
         cv2.rectangle(self.frame, (self.box[0], self.box[1]), (self.box[2], self.box[3]),
-                      self.COLORS[self.idx], 2)
+                      COLORS[self.idx], 2)
         self.y = self.box[1] - 15 if self.box[1] - 15 > 15 else self.box[1] + 15
         cv2.putText(self.frame, str(self.label) + " " + str(self.dist), (self.box[0], self.y),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.COLORS[self.idx], 2)
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[self.idx], 2)
 
     def find_dist_between_humans(self):
         """
         This method will find the distance between all the humans in the frame
-        and if the distance is greater than 6 ft, it will play audio.
+        and if the distance is less than 6 ft, it will play audio.
         :return:
         """
         if len(self.faces) > 1:
             for i in range(len(self.faces) - 1):
-                self.ang, self.ang2 = get_angle(a=(self.faces[i][0], self.faces[i][1]), b=(320, 480), c=(self.faces[i + 1][0], self.faces[i + 1][1]))
+                self.ang, self.ang2 = get_angle(a=(self.faces[i][0], self.faces[i][1]), b=(320, 480),
+                                                c=(self.faces[i + 1][0], self.faces[i + 1][1]))
+                print("Angle1: ", self.ang)
+                print("Angle2: ", self.ang2)
                 self.dist1 = calcDistance(self.faces[i][2])
                 self.dist2 = calcDistance(self.faces[i + 1][2])
-                self.finalDistance = finalDist(self.ang, self.dist2, self.dist1)
+                print("dist1: ", self.dist1)
+                print("dist2: ", self.dist2)
+                print("a=", self.dist1, " b=", self.ang, " c=", self.dist2)
+                self.finalDistance = finalDist(self.ang2, self.dist2, self.dist1)
                 if len(self.arr) <= 20:
                     self.arr.append((self.finalDistance / 12))
                 else:
                     self.Asum = sum(self.arr) / len(self.arr)
-                    print(self.Asum)
+                    print("ASUM: ", self.Asum)
                     self.Asum -= 1
                     print("Face", i, " & ", i + 1, ": ", round(self.Asum, 1), " feet apart.")
                     self.arr.clear()
@@ -209,10 +219,9 @@ class SocialDistancing:
         """
         while SocialDistancing.run_program:
             try:
-                self.load_models()
-                self.start_video_stream()
                 self.grab_next_frame()
                 self.set_dimensions_for_frame()
+                self.rotate_frame()
                 self.create_frame_blob()
                 self.extract_face_detections()
             except ValueError:
@@ -220,7 +229,6 @@ class SocialDistancing:
                 time.sleep(10)
         self.clean_up()
 
+
 if __name__ == "__main__":
     SocialDistancing.perform_job(preferableTarget=cv2.dnn.DNN_TARGET_MYRIAD)
-
-

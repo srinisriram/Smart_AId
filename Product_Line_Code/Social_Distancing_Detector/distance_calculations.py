@@ -1,7 +1,8 @@
 import math
+from constants import cam_focal_point
 
 def calcDistance(x):
-    y = 900 / x * 12
+    y = cam_focal_point / x * 12
     # y = 275 / x * 12
     y = round(y)
     return y
