@@ -72,7 +72,7 @@ class SocialDistancing:
         :key
         """
         print("[INFO] starting video stream...")
-        self.vs = cv2.VideoCapture(0)
+        self.vs = VideoStream(src=0).start()
         time.sleep(2.0)
 
     def grab_next_frame(self):
@@ -80,7 +80,7 @@ class SocialDistancing:
         This method extracts the next frame from the video stream.
         :key
         """
-        _, self.frame = self.vs.read()
+        self.frame = self.vs.read()
         if self.frame is None:
             return
         self.frame = imutils.resize(self.frame, width=frame_width_in_pixels)
