@@ -170,7 +170,9 @@ class SocialDistancing:
                     self.arr.clear()
 
                     if self.Asum <= 5:
+                        print("Trying to play Audio...")
                         self.play_audio()
+                        self.AudioPlay = False
         self.display_frame()
 
     def play_audio(self):
@@ -178,13 +180,14 @@ class SocialDistancing:
         This method is used for playing the welcome alarm for Srinivas.
         :return:
         """
+        print("Inside the function")
         SoundThread = threading.Thread(target=PlayAudio.play_audio_file)
         if not self.AudioPlay:
             self.AudioPlay = True
             print("[INFO]: Starting Sound Thread")
             SoundThread.start()
-            time.sleep(3)
-            self.AudioPlay = False
+            if SoundThread.is_alive() == False:
+                self.AudioPlay = False
             print("[INFO]: Stopping Sound Thread")
 
     def display_frame(self):

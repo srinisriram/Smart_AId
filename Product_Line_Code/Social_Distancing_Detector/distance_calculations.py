@@ -16,4 +16,6 @@ def get_angle(a, b, c):
 
 def finalDist(firstSide, angle, secondSide):
     thirdSide = math.sqrt((secondSide ** 2) + (firstSide ** 2) - 2 * secondSide * firstSide * math.cos((angle * (math.pi) / 180 )))
+    thirdSide = 2*thirdSide + 0.6
+    thirdSide += 1
     return round(thirdSide)
