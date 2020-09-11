@@ -11,10 +11,6 @@ class OpenDoor:
     def __init__(self):
         self.setup_gpio()
 
-    @classmethod
-    def open_door(cls):
-        OpenDoor.thread_for_opening_door()
-
     def setup_gpio(self):
         gpio.setmode(gpio.BCM)
         gpio.setwarnings(False)
@@ -37,3 +33,4 @@ class OpenDoor:
         time.sleep(3)
         self.stop_motor()
         time.sleep(2)
+

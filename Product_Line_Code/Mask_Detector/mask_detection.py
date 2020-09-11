@@ -262,7 +262,7 @@ class MaskDetector:
         """
         This function is used for opening the door by using motors and Raspberry Pi GPIO pins.
         """
-        MotorThread = threading.Thread(target=OpenDoor.open_door)
+        MotorThread = threading.Thread(target=OpenDoor().thread_for_opening_door)
         print("[INFO]: Starting Open Door Thread.")
         if not self.runMotor:
             self.runMotor = True
