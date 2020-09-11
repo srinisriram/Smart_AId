@@ -1,16 +1,15 @@
-
-import time
-import cv2
-import numpy as np
-import math
-from constants import CLASSES, COLORS, prototxt_path, model_path, frame_width_in_pixels
-from distance_calculations import calcDistance, get_angle, finalDist
-import threading
-import os
-import imutils
-from play_audio_social import PlayAudio
 import sys
+import threading
+import time
+
+import cv2
+import imutils
+import numpy as np
+from constants import prototxt_path, model_path, frame_width_in_pixels
+from distance_calculations import calcDistance, get_angle, finalDist
 from imutils.video import VideoStream
+from play_audio_social import PlayAudio
+
 
 class SocialDistancing:
     preferableTarget = None
@@ -46,7 +45,6 @@ class SocialDistancing:
         self.AudioPlay = True
         self.humanIndex = 15
 
-
         self.load_models()
         self.start_video_stream()
 
@@ -74,7 +72,7 @@ class SocialDistancing:
         :key
         """
         print("[INFO] starting video stream...")
-        self.vs = VideoStream(src=0).start()
+        self.vs = cv2.VideoCapture(0)
         time.sleep(2.0)
 
     def grab_next_frame(self):
@@ -82,7 +80,7 @@ class SocialDistancing:
         This method extracts the next frame from the video stream.
         :key
         """
-        self.frame = self.vs.read()
+        _, self.frame = self.vs.read()
         if self.frame is None:
             return
         self.frame = imutils.resize(self.frame, width=frame_width_in_pixels)
@@ -130,7 +128,7 @@ class SocialDistancing:
         self.box2 = (self.box[0], self.box[1], self.box[2] - self.box[0], self.box[3] - self.box[1])
         self.faces.append(self.box2)
         (self.xCorr, self.yCoor, self.width, self.height) = (
-        self.box[0], self.box[1], self.box[2] - self.box[0], self.box[3] - self.box[1])
+            self.box[0], self.box[1], self.box[2] - self.box[0], self.box[3] - self.box[1])
         self.dist = calcDistance(self.width)
 
         self.labels = "{}: {:.2f}%".format(self.CLASSES[self.idx],
@@ -149,7 +147,8 @@ class SocialDistancing:
         """
         if len(self.faces) > 1:
             for i in range(len(self.faces) - 1):
-                self.ang, self.ang2 = get_angle(a=(self.faces[i][0], self.faces[i][1]), b=(320, 480), c=(self.faces[i + 1][0], self.faces[i + 1][1]))
+                self.ang, self.ang2 = get_angle(a=(self.faces[i][0], self.faces[i][1]), b=(320, 480),
+                                                c=(self.faces[i + 1][0], self.faces[i + 1][1]))
                 self.dist1 = calcDistance(self.faces[i][2])
                 self.dist2 = calcDistance(self.faces[i + 1][2])
                 self.finalDistance = finalDist(self.ang, self.dist2, self.dist1)
@@ -219,7 +218,6 @@ class SocialDistancing:
                 time.sleep(10)
         self.clean_up()
 
+
 if __name__ == "__main__":
     SocialDistancing.perform_job(preferableTarget=cv2.dnn.DNN_TARGET_MYRIAD)
-
-
