@@ -93,6 +93,13 @@ class SocialDistancing:
         if not self.h or not self.w:
             (self.h, self.w) = self.frame.shape[:2]
 
+    def rotate_frame(self):
+        """
+        This method will rotate the frame as the camera was installed upside down.
+        :key
+        """
+        self.frame = cv2.rotate(self.frame, cv2.ROTATE_180)
+
     def create_frame_blob(self):
         """
         This method will create a blob for our face detector to detect a face.
@@ -209,6 +216,7 @@ class SocialDistancing:
             try:
                 self.grab_next_frame()
                 self.set_dimensions_for_frame()
+                self.rotate_frame()
                 self.create_frame_blob()
                 self.extract_face_detections()
             except ValueError:
