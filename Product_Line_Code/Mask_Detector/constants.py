@@ -8,7 +8,7 @@ recognizer_path = "recognizer.pickle"
 
 labels_path = "labels.pickle"
 
-sound_file = "speech1.wav"
+sound_file = "mask_warning_1.wav"
 
 COLORS = [(0, 255, 0), (0, 0, 255)]
 
