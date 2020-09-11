@@ -149,7 +149,7 @@ class SocialDistancing:
     def find_dist_between_humans(self):
         """
         This method will find the distance between all the humans in the frame
-        and if the distance is greater than 6 ft, it will play audio.
+        and if the distance is less than 6 ft, it will play audio.
         :return:
         """
         if len(self.faces) > 1:
@@ -162,12 +162,13 @@ class SocialDistancing:
                 self.dist2 = calcDistance(self.faces[i + 1][2])
                 print("dist1: ", self.dist1)
                 print("dist2: ", self.dist2)
-                self.finalDistance = finalDist(self.ang, self.dist2, self.dist1)
+                print("a=", self.dist1, " b=", self.ang, " c=", self.dist2)
+                self.finalDistance = finalDist(self.ang2, self.dist2, self.dist1)
                 if len(self.arr) <= 20:
                     self.arr.append((self.finalDistance / 12))
                 else:
                     self.Asum = sum(self.arr) / len(self.arr)
-                    print(self.Asum)
+                    print("ASUM: ", self.Asum)
                     self.Asum -= 1
                     print("Face", i, " & ", i + 1, ": ", round(self.Asum, 1), " feet apart.")
                     self.arr.clear()
