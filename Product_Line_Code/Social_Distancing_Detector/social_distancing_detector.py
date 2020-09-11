@@ -1,3 +1,4 @@
+
 import time
 import cv2
 import numpy as np
@@ -7,11 +8,13 @@ from distance_calculations import calcDistance, get_angle, finalDist
 import threading
 import os
 import imutils
-from play_audio_attendance import PlayAudio
+from play_audio_social import PlayAudio
 import sys
+from imutils.video import VideoStream
 
 class SocialDistancing:
     preferableTarget = None
+    run_program = True
 
     def __init__(self):
         self.net = None
@@ -41,8 +44,8 @@ class SocialDistancing:
         self.Asum = None
         self.key = None
         self.AudioPlay = True
-        self.humanIndex = 16
-        self.run_program = True
+        self.humanIndex = 15
+
 
         self.load_models()
         self.start_video_stream()
@@ -54,7 +57,7 @@ class SocialDistancing:
         :key
         """
         SocialDistancing.preferableTarget = preferableTarget
-        t1 = threading.Thread(target=SocialDistancing.thread_for_social_distancing_detection)
+        t1 = threading.Thread(target=SocialDistancing().thread_for_social_distancing_detection)
         t1.start()
 
     def load_models(self):
@@ -62,12 +65,7 @@ class SocialDistancing:
         This method will load the caffe model that we will use for detecting humans, and then set the preferable target to the correct target.
         :key
         """
-        self.net = cv2.dnn.readNetFromCaffe(os.path.join(
-            os.path.dirname(os.path.realpath(__file__)),
-            prototxt_path),
-            os.path.join(
-                os.path.dirname(os.path.realpath(__file__)),
-                model_path))
+        self.net = cv2.dnn.readNetFromCaffe(prototxt_path, model_path)
         self.net.setPreferableTarget(SocialDistancing.preferableTarget)
 
     def start_video_stream(self):
@@ -76,14 +74,15 @@ class SocialDistancing:
         :key
         """
         print("[INFO] starting video stream...")
-        self.vs = cv2.VideoCapture(0)
+        self.vs = VideoStream(src=0).start()
+        time.sleep(2.0)
 
     def grab_next_frame(self):
         """
         This method extracts the next frame from the video stream.
         :key
         """
-        _, self.frame = self.vs.read()
+        self.frame = self.vs.read()
         if self.frame is None:
             return
         self.frame = imutils.resize(self.frame, width=frame_width_in_pixels)

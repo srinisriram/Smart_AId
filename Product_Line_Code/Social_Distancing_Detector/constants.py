@@ -11,6 +11,6 @@ prototxt_path = 'models/MobileNetSSD_deploy.prototxt.txt'
 
 model_path = 'models/MobileNetSSD_deploy.caffemodel'
 
-sound_file_path = 'sound_files/warning.wav'
+sound_file = 'sound_files/warning.wav'
 
 frame_width_in_pixels = 640
