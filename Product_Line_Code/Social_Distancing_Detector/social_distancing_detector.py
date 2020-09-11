@@ -115,11 +115,11 @@ class SocialDistancing:
                 self.label = round(self.idx)
 
                 if self.label == self.humanIndex:
-                    self.find_dist_each_human()
+                    self.find_dist_each_human(i)
 
         self.find_dist_between_humans()
 
-    def find_dist_each_human(self):
+    def find_dist_each_human(self, i):
         """
         This method will find the distance for each human from the camera and draw the bounding boxes onto the frame.
         :return:
