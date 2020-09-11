@@ -156,14 +156,10 @@ class SocialDistancing:
             for i in range(len(self.faces) - 1):
                 self.ang, self.ang2 = get_angle(a=(self.faces[i][0], self.faces[i][1]), b=(320, 480),
                                                 c=(self.faces[i + 1][0], self.faces[i + 1][1]))
-                print("Angle1: ", self.ang)
-                print("Angle2: ", self.ang2)
                 self.dist1 = calcDistance(self.faces[i][2])
                 self.dist2 = calcDistance(self.faces[i + 1][2])
-                print("dist1: ", self.dist1)
-                print("dist2: ", self.dist2)
-                print("a=", self.dist1, " b=", self.ang, " c=", self.dist2)
-                self.finalDistance = finalDist(self.ang2, self.dist2, self.dist1)
+                print("a=", self.dist1, " b=", self.ang2, " c=", self.dist2)
+                self.finalDistance = finalDist(self.dist1, self.ang2, self.dist2)
                 if len(self.arr) <= 20:
                     self.arr.append((self.finalDistance / 12))
                 else:
