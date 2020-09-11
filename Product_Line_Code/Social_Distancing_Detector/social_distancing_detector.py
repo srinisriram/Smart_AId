@@ -177,7 +177,7 @@ class SocialDistancing:
 
     def play_audio(self):
         """
-        This method is used for playing the welcome alarm for Srinivas.
+        This method is used for playing the social distancing alarm.
         :return:
         """
         print("Inside the function")
@@ -192,7 +192,7 @@ class SocialDistancing:
 
     def display_frame(self):
         """
-        This method will display the frame and wait for the user to exit.
+        This method will display the frame and wait for the user to quit.
         :key
         """
         self.faces.clear()
