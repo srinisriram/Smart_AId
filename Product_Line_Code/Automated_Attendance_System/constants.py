@@ -14,7 +14,7 @@ srinivas_sound_path = "sound_files/srinivas.wav"
 
 aditya_sound_path = "sound_files/aditya.wav"
 
-COLORS = [(255,0,0), (0,191,255), (50,205,50)]
+COLORS = [(255, 0, 0), (0, 191, 255), (50, 205, 50)]
 
 LABELS = ["Abhisar", "Srinivas", "Aditya"]
 
