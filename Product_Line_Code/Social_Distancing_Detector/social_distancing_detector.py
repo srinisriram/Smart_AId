@@ -102,14 +102,14 @@ class SocialDistancing:
 
     def create_frame_blob(self):
         """
-        This method will create a blob for our face detector to detect a face.
+        This method will create a blob for our human detector to detect a human.
         :key
         """
         self.blob = cv2.dnn.blobFromImage(cv2.resize(self.frame, (300, 300)), 0.007843, (300, 300), 127.5)
 
-    def extract_face_detections(self):
+    def extract_human_detections(self):
         """
-        This method will extract each face detection that our face detection model provides.
+        This method will extract each human detection that our human detection model provides.
         :return:
         """
         self.net.setInput(self.blob)
@@ -222,7 +222,7 @@ class SocialDistancing:
                 self.set_dimensions_for_frame()
                 self.rotate_frame()
                 self.create_frame_blob()
-                self.extract_face_detections()
+                self.extract_human_detections()
             except ValueError:
                 self.clean_up()
                 time.sleep(10)
