@@ -240,9 +240,9 @@ def finalDist(firstSide, angle, secondSide):
 
 
 # Cost
-![](Cost breakdown-1.png)
-![](Cost breakdown-2.png)
-![](Cost breakdown-3.png)
+![](cost_1.png)
+![](cost_2.png)
+![](cost_3.png)
 
 
 
