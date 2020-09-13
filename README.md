@@ -1,5 +1,6 @@
 # Smart_AId
 ![](SmartAI-1.png)
+Link:(https://docs.google.com/drawings/d/1tL8almkakg1py_vwmerM944xJadmECa3oJQoNZ7X9qU/edit?usp=sharing)
 
 ## Introduction
 
