@@ -280,6 +280,20 @@ class AttendanceTracker:
             self.AudioPlay = False
             print("[INFO]: Stopping Sound Thread")
 
+    def play_audio_arsh(self):
+        """
+        This function is used for playing the welcome alarm for Aditya.
+        :return:
+        """
+        SoundThread = threading.Thread(target=PlayAudio.play_arsh_file)
+        print("[INFO]: Starting Sound Thread")
+        if not self.AudioPlay:
+            self.AudioPlay = True
+            SoundThread.start()
+            time.sleep(3)
+            self.AudioPlay = False
+            print("[INFO]: Stopping Sound Thread")
+
     def open_door(self):
         """
         This function is used for opening the door by using motors and Raspberry Pi GPIO pins.
@@ -305,6 +319,9 @@ class AttendanceTracker:
             self.open_door()
         if self.name == "Aditya" and self.probability > MIN_CONFIDENCE_FOR_FACE: 
             self.play_audio_aditya()
+            self.open_door()
+        if self.name == "Arsh" and self.probability > MIN_CONFIDENCE_FOR_FACE:
+            self.play_audio_arsh()
             self.open_door()
 
     def loop_over_frames(self):
