@@ -246,5 +246,10 @@ def finalDist(firstSide, angle, secondSide):
 ![](cost_2.png)
 ![](cost_3.png)
 
+# Presentation
+To view the presentation we submitted to the AI Summit, please scan this QR Code:
+
+![](presentation_link.png)
+
 
 
