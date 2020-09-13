@@ -282,7 +282,7 @@ class AttendanceTracker:
 
     def play_audio_arsh(self):
         """
-        This function is used for playing the welcome alarm for Aditya.
+        This function is used for playing the welcome alarm for Arsh.
         :return:
         """
         SoundThread = threading.Thread(target=PlayAudio.play_arsh_file)
@@ -309,7 +309,7 @@ class AttendanceTracker:
 
     def check_name(self):
         """
-            This function is used for checking which person is detected and if the probability is higher than the minimum confidence.
+        This function is used for checking which person is detected and if the probability is higher than the minimum confidence.
         """
         if self.name == "Srinivas" and self.probability > MIN_CONFIDENCE_FOR_FACE:
             self.play_audio_srini()
