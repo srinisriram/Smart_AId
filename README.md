@@ -66,6 +66,17 @@ Now that you know what Deep Learning models we are using, let's talk about how w
 
 After the class label is outputted, we then take corresponding action. If the person is not wearing a face mask, we play a computer-generated warning asking the person to wear a mask. If the person is wearing a mask, we use Raspberry Pi's GPIO pins to send a signal to our motor controller, which then causes the motor to spin, which will open the door to allow the person inside. 
 
+Code Snippet of OpenCV/Imutils Video Capture (USED IN ALL PRODUCTS):
+```
+    def start_video_stream(self):
+        """
+        This method will initialize the camera.
+        :key
+        """
+        print("[INFO] starting video stream...")
+        self.vs = VideoStream(src=0).start()
+        time.sleep(2.0)
+```
 
 ## 2. Attendance Tracker.
 
@@ -191,5 +202,37 @@ with conn:
 
 ```
 
-4. Social Distancing Detector
+## 4. Social Distancing Detector
 
+### Why we did it
+Like wearing a mask, one of the very first precautions that doctors recommended was to maintain a 6 ft. distance between each other. This however, is one of the biggest precautions I have seen people break. Usually, in stores, there are 2 pieces of tape to mark 6 feet. However, there is nobody to actually monitoring to check if people are social distancing. Our product is a simple and easy way for people to follow this rule. We calculate the distance between the two people, and if the distance is less than 6 feet, an alarm will play, signaling that the people should social distance. 
+
+### How we built it
+Our product uses the same Deep Learning Model caffe model for detecting humans as the Occupancy Tracker. (Look at Occupancy Tracker section to see how we use the caffe model). 
+
+Now, we start a OpenCV video capture, loop over frames, detect for humans, and if more than 1 human is detected, we extract their position coordinates. We then proceed to do some math calculations to figure out the distance between the individuals, and if the distance is less than 6, we play the computer generated sound.
+
+Calculating math for social distancing:
+```
+import math
+from constants import cam_focal_point
+
+def calcDistance(x):
+    y = cam_focal_point / x * 12
+    # y = 275 / x * 12
+    y = round(y)
+    return y
+
+
+def get_angle(a, b, c):
+    angle1 = (abs(math.atan2(c[1] - b[1], c[0] - b[0]) - math.atan2(a[1] - b[1], a[0] - b[0])))
+    angle2 = (abs(math.degrees(math.atan2(c[1] - b[1], c[0] - b[0]) - math.atan2(a[1] - b[1], a[0] - b[0]))))
+    return round(angle1, 0), round(angle2, 0)
+
+
+def finalDist(firstSide, angle, secondSide):
+    thirdSide = math.sqrt((secondSide ** 2) + (firstSide ** 2) - 2 * secondSide * firstSide * math.cos((angle * (math.pi) / 180 )))
+    thirdSide = 2*thirdSide + 0.6
+    thirdSide += 1
+    return round(thirdSide)
+```
