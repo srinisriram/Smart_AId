@@ -1,5 +1,5 @@
 # Smart_AId
-
+![](SmartAI-1.png)
 
 ## Introduction
 
