@@ -2,6 +2,11 @@
 ![](SmartAI-1.png)
 Link:(https://docs.google.com/drawings/d/1tL8almkakg1py_vwmerM944xJadmECa3oJQoNZ7X9qU/edit?usp=sharing)
 
+## Collaborators
+<a href="https://github.com/srinisriram/Smart_AId/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=srinisriram/Smart_AId" />
+</a>
+
 ## Introduction
 
 We at Smart_AId, (Abhisar Anand, Aditya Anand, Arsh Sharma, Srinivas Sriram) participated in the Girls Computing League's 4th AI Innovation Business Summit. We decided to create 4 different products in response to the COVID-19 pandemic going on in the world right now. These products aim to make reopening of businesses and schools in this unfamiliar time as easy as possible, with the help of AI, Deep Learning, Raspberry Pi's + Intel Movidius Sticks, and Cameras. These are our four products as well as how our code works.
